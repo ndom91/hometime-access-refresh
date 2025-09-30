@@ -7,15 +7,13 @@ import { promisify } from "util";
 
 const execAsync = promisify(exec);
 
-// Load environment variables from .env.local
 config({ path: ".env.local" });
 
-// Configuration - set these values or use environment variables
 const CLIENT_ID = process.env.GCALCLI_CLIENT_ID || "";
 const CLIENT_SECRET = process.env.GCALCLI_CLIENT_SECRET || "";
-const REMOTE_HOST = process.env.REMOTE_HOST || "nas-docker";
-const REMOTE_PATH = process.env.REMOTE_PATH || "/opt/hometime/";
-const SERVICE_NAME = process.env.SERVICE_NAME || "hometime";
+const REMOTE_HOST = process.env.REMOTE_HOST || "";
+const REMOTE_PATH = process.env.REMOTE_PATH || "";
+const SERVICE_NAME = process.env.SERVICE_NAME || "";
 
 if (!CLIENT_ID || !CLIENT_SECRET) {
   console.error("Error: CLIENT_ID and CLIENT_SECRET must be set");
@@ -59,7 +57,9 @@ ptyProcess.onData((data: string) => {
   }
   // Check for authorization URL
   else if (buffer.includes("https://accounts.google.com/o/oauth2/auth")) {
-    const urlMatch = buffer.match(/(https:\/\/accounts\.google\.com\/o\/oauth2\/auth[^\s]+)/);
+    const urlMatch = buffer.match(
+      /(https:\/\/accounts\.google\.com\/o\/oauth2\/auth[^\s]+)/,
+    );
     if (urlMatch) {
       const url = urlMatch[1];
       console.log("\n\nOpening authorization URL in browser...");
@@ -76,6 +76,13 @@ ptyProcess.onData((data: string) => {
 ptyProcess.onExit(async ({ exitCode }) => {
   if (exitCode === 0) {
     console.log("\n✓ Token refresh completed successfully");
+
+    if (!REMOTE_HOST || !REMOTE_PATH || !SERVICE_NAME) {
+      console.log(
+        "\nNo REMOTE_HOST, REMOTE_PATH, or SERVICE_NAME set. Skipping remote operations.",
+      );
+      process.exit(0);
+    }
 
     try {
       // Copy oauth file to remote server
