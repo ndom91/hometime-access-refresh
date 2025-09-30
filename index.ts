@@ -3,6 +3,9 @@
 import * as pty from "node-pty";
 import { config } from "dotenv";
 import { exec } from "child_process";
+import { promisify } from "util";
+
+const execAsync = promisify(exec);
 
 // Load environment variables from .env.local
 config({ path: ".env.local" });
@@ -10,6 +13,9 @@ config({ path: ".env.local" });
 // Configuration - set these values or use environment variables
 const CLIENT_ID = process.env.GCALCLI_CLIENT_ID || "";
 const CLIENT_SECRET = process.env.GCALCLI_CLIENT_SECRET || "";
+const REMOTE_HOST = process.env.REMOTE_HOST || "nas-docker";
+const REMOTE_PATH = process.env.REMOTE_PATH || "/opt/hometime/";
+const SERVICE_NAME = process.env.SERVICE_NAME || "hometime";
 
 if (!CLIENT_ID || !CLIENT_SECRET) {
   console.error("Error: CLIENT_ID and CLIENT_SECRET must be set");
@@ -67,9 +73,28 @@ ptyProcess.onData((data: string) => {
   }
 });
 
-ptyProcess.onExit(({ exitCode }) => {
+ptyProcess.onExit(async ({ exitCode }) => {
   if (exitCode === 0) {
     console.log("\n✓ Token refresh completed successfully");
+
+    try {
+      // Copy oauth file to remote server
+      console.log(`\nCopying oauth file to ${REMOTE_HOST}:${REMOTE_PATH}...`);
+      const scpCommand = `scp ~/Library/Application\\ Support/gcalcli/oauth ${REMOTE_HOST}:${REMOTE_PATH}`;
+      await execAsync(scpCommand);
+      console.log("✓ OAuth file copied successfully");
+
+      // Restart service on remote server
+      console.log(`\nRestarting ${SERVICE_NAME} service on ${REMOTE_HOST}...`);
+      const restartCommand = `ssh ${REMOTE_HOST} "systemctl restart ${SERVICE_NAME}"`;
+      await execAsync(restartCommand);
+      console.log(`✓ ${SERVICE_NAME} service restarted successfully`);
+
+      console.log("\n✓ All operations completed successfully!");
+    } catch (error) {
+      console.error("\n✗ Error during remote operations:", error);
+      process.exit(1);
+    }
   } else {
     console.error(`\n✗ Process exited with code ${exitCode}`);
     process.exit(exitCode);
