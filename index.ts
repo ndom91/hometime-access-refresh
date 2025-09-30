@@ -2,8 +2,8 @@
 
 import * as pty from "node-pty";
 import { config } from "dotenv";
-import { exec } from "child_process";
-import { promisify } from "util";
+import { exec } from "node:child_process";
+import { promisify } from "node:util";
 
 const execAsync = promisify(exec);
 
@@ -17,9 +17,7 @@ const SERVICE_NAME = process.env.SERVICE_NAME || "";
 
 if (!CLIENT_ID || !CLIENT_SECRET) {
   console.error("Error: CLIENT_ID and CLIENT_SECRET must be set");
-  console.error(
-    "Either set GCALCLI_CLIENT_ID and GCALCLI_CLIENT_SECRET environment variables",
-  );
+  console.error("Either set GCALCLI_CLIENT_ID and GCALCLI_CLIENT_SECRET environment variables");
   console.error("or edit this script to add your credentials");
   process.exit(1);
 }
@@ -47,19 +45,17 @@ ptyProcess.onData((data: string) => {
   }
   // Check for client ID prompt
   else if (buffer.includes("Client ID:")) {
-    ptyProcess.write(CLIENT_ID + "\r");
+    ptyProcess.write(`${CLIENT_ID}\r`);
     buffer = "";
   }
   // Check for client secret prompt
   else if (buffer.includes("Client Secret:")) {
-    ptyProcess.write(CLIENT_SECRET + "\r");
+    ptyProcess.write(`${CLIENT_SECRET}\r`);
     buffer = "";
   }
   // Check for authorization URL
   else if (buffer.includes("https://accounts.google.com/o/oauth2/auth")) {
-    const urlMatch = buffer.match(
-      /(https:\/\/accounts\.google\.com\/o\/oauth2\/auth[^\s]+)/,
-    );
+    const urlMatch = buffer.match(/(https:\/\/accounts\.google\.com\/o\/oauth2\/auth[^\s]+)/);
     if (urlMatch) {
       const url = urlMatch[1];
       console.log("\n\nOpening authorization URL in browser...");
