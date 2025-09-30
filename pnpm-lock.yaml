@@ -11,12 +11,22 @@ importers:
       '@typescript/native-preview':
         specifier: 7.0.0-dev.20250930.1
         version: 7.0.0-dev.20250930.1
+      dotenv:
+        specifier: ^17.2.3
+        version: 17.2.3
+      node-pty:
+        specifier: ^1.0.0
+        version: 1.0.0
       tsx:
         specifier: ^4.20.6
         version: 4.20.6
       typescript:
         specifier: ^5.9.2
         version: 5.9.2
+    devDependencies:
+      '@types/node':
+        specifier: ^24.6.0
+        version: 24.6.0
 
 packages:
 
@@ -176,6 +186,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@types/node@24.6.0':
+    resolution: {integrity: sha512-F1CBxgqwOMc4GKJ7eY22hWhBVQuMYTtqI8L0FcszYcpYX0fzfDGpez22Xau8Mgm7O9fI+zA/TYIdq3tGWfweBA==}
+
   '@typescript/native-preview-darwin-arm64@7.0.0-dev.20250930.1':
     resolution: {integrity: sha512-1SeCV0scY0fmqfs+paXTe4///8Mj8wSvGei5F3hcO1TO91yYoz74PlCKDHNuqEiGA1sLW7bUSD3btnqShwehUg==}
     cpu: [arm64]
@@ -215,6 +228,10 @@ packages:
     resolution: {integrity: sha512-0CkK8gqoG4eMIpmVPl7P/gJPWTIxGcV05P1+Dl1kA0u5mBPrNtvB0T1OsBlSJepWeNzTvyM0f3szERUQL916uQ==}
     hasBin: true
 
+  dotenv@17.2.3:
+    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
+    engines: {node: '>=12'}
+
   esbuild@0.25.10:
     resolution: {integrity: sha512-9RiGKvCwaqxO2owP61uQ4BgNborAQskMR6QusfWzQqv7AZOg5oGehdY2pRJMTKuwxd1IDBP4rSbI5lHzU7SMsQ==}
     engines: {node: '>=18'}
@@ -228,6 +245,12 @@ packages:
   get-tsconfig@4.10.1:
     resolution: {integrity: sha512-auHyJ4AgMz7vgS8Hp3N6HXSmlMdUyhSUrfBF16w153rxtLIEOE+HGqaBppczZvnHLqQJfiHotCYpNhl0lUROFQ==}
 
+  nan@2.23.0:
+    resolution: {integrity: sha512-1UxuyYGdoQHcGg87Lkqm3FzefucTa0NAiOcuRsDmysep3c1LVCRK2krrUDafMWtjSG04htvAmvg96+SDknOmgQ==}
+
+  node-pty@1.0.0:
+    resolution: {integrity: sha512-wtBMWWS7dFZm/VgqElrTvtfMq4GzJ6+edFI0Y0zyzygUSZMgZdraDUMUhCIvkjhJjme15qWmbyJbtAx4ot4uZA==}
+
   resolve-pkg-maps@1.0.0:
     resolution: {integrity: sha512-seS2Tj26TBVOC2NIc2rOe2y2ZO7efxITtLZcGSOnHHNOQ7CkiUBfw0Iw2ck6xkIhPwLhKNLS8BO+hEpngQlqzw==}
 
@@ -240,6 +263,9 @@ packages:
     resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  undici-types@7.13.0:
+    resolution: {integrity: sha512-Ov2Rr9Sx+fRgagJ5AX0qvItZG/JKKoBRAVITs1zk7IqZGTJUwgUr7qoYBpWwakpWilTZFM98rG/AFRocu10iIQ==}
 
 snapshots:
 
@@ -321,6 +347,10 @@ snapshots:
   '@esbuild/win32-x64@0.25.10':
     optional: true
 
+  '@types/node@24.6.0':
+    dependencies:
+      undici-types: 7.13.0
+
   '@typescript/native-preview-darwin-arm64@7.0.0-dev.20250930.1':
     optional: true
 
@@ -351,6 +381,8 @@ snapshots:
       '@typescript/native-preview-linux-x64': 7.0.0-dev.20250930.1
       '@typescript/native-preview-win32-arm64': 7.0.0-dev.20250930.1
       '@typescript/native-preview-win32-x64': 7.0.0-dev.20250930.1
+
+  dotenv@17.2.3: {}
 
   esbuild@0.25.10:
     optionalDependencies:
@@ -388,6 +420,12 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
+  nan@2.23.0: {}
+
+  node-pty@1.0.0:
+    dependencies:
+      nan: 2.23.0
+
   resolve-pkg-maps@1.0.0: {}
 
   tsx@4.20.6:
@@ -398,3 +436,5 @@ snapshots:
       fsevents: 2.3.3
 
   typescript@5.9.2: {}
+
+  undici-types@7.13.0: {}
