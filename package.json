@@ -1,0 +1,19 @@
+{
+  "name": "hometime-access-refresh",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "tsx index.ts",
+    "typecheck": "tsgo --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@typescript/native-preview": "7.0.0-dev.20250930.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.2"
+  }
+}
