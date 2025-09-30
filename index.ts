@@ -2,6 +2,7 @@
 
 import * as pty from "node-pty";
 import { config } from "dotenv";
+import { exec } from "child_process";
 
 // Load environment variables from .env.local
 config({ path: ".env.local" });
@@ -49,6 +50,20 @@ ptyProcess.onData((data: string) => {
   else if (buffer.includes("Client Secret:")) {
     ptyProcess.write(CLIENT_SECRET + "\r");
     buffer = "";
+  }
+  // Check for authorization URL
+  else if (buffer.includes("https://accounts.google.com/o/oauth2/auth")) {
+    const urlMatch = buffer.match(/(https:\/\/accounts\.google\.com\/o\/oauth2\/auth[^\s]+)/);
+    if (urlMatch) {
+      const url = urlMatch[1];
+      console.log("\n\nOpening authorization URL in browser...");
+      exec(`open "${url}"`, (error) => {
+        if (error) {
+          console.error("Failed to open browser:", error);
+        }
+      });
+      buffer = "";
+    }
   }
 });
 
